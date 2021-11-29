@@ -1,5 +1,13 @@
 import BaseQuery from './base';
-import { OrderPair } from './typings';
+
+type OrderPair<T> = [keyof T, 'ASC' | 'DESC'];
+
+export interface SelectOptions<T> {
+	orders?: OrderPair<T>[];
+	offset?: number;
+	limit?: number;
+}
+
 
 export default class SelectQuery<T, R = Record<string, unknown>> extends BaseQuery<R[]> {
 	orderBy(...orders: OrderPair<T>[]): SelectQuery<T, R> {

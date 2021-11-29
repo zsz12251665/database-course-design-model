@@ -1,8 +1,7 @@
 import BaseQuery from './base';
-import { OkPacket, Primary } from './typings';
 
-export default class DeleteQuery<T> extends BaseQuery<OkPacket> {
-	constructor(table: string, id: Primary<T>) {
+export default class DeleteQuery extends BaseQuery<void> {
+	constructor(table: string, id: string) {
 		super(`DELETE FROM \`${table}\` WHERE \`id\`=?`, [id]);
 	}
 }

@@ -13,16 +13,16 @@ CREATE TABLE `books` (
 );
 
 CREATE TABLE `copies` (
-	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
 	`book_ISBN` VARCHAR(15) NOT NULL
 );
 ALTER TABLE `copies` ADD FOREIGN KEY (`book_ISBN`) REFERENCES `books`(`ISBN`) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE INDEX `copies_book_ISBN` ON `copies`(`book_ISBN`);
 
 CREATE TABLE `transactions` (
-	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
 	`user_id` VARCHAR(255) NOT NULL,
-	`copy_id` INT NOT NULL,
+	`copy_id` CHAR(36) NOT NULL,
 	`borrowTime` DATE NOT NULL,
 	`returnTime` DATE DEFAULT NULL,
 	`isFinePaid` BOOLEAN DEFAULT NULL
@@ -33,7 +33,7 @@ CREATE INDEX `transactions_user_id` ON `transactions`(`user_id`);
 CREATE INDEX `transactions_copy_id` ON `transactions`(`copy_id`);
 
 CREATE TABLE `comments` (
-	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
 	`user_id` VARCHAR(255) NOT NULL,
 	`book_ISBN` VARCHAR(15) NOT NULL,
 	`createTime` TIMESTAMP NOT NULL,
@@ -45,7 +45,7 @@ CREATE INDEX `comments_user_id` ON `comments`(`user_id`);
 CREATE INDEX `comments_book_ISBN` ON `comments`(`book_ISBN`);
 
 CREATE TABLE `notifications` (
-	`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
 	`user_id` VARCHAR(255) NOT NULL,
 	`message` TEXT NOT NULL,
 	`sentTime` TIMESTAMP NOT NULL,

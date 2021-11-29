@@ -1,7 +1,6 @@
 import BaseQuery from './base';
-import { OkPacket } from './typings';
 
-export default class InsertQuery<T> extends BaseQuery<OkPacket> {
+export default class InsertQuery<T> extends BaseQuery<void> {
 	constructor(table: string, entity: Partial<T>) {
 		const keys = Object.keys(entity).map((key) => `\`${key}\``).join(', ');
 		const escapes = Object.keys(entity).map(() => '?').join(', ');

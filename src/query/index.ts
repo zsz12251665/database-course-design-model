@@ -1,8 +1,7 @@
 import DeleteQuery from './delete';
 import InsertQuery from './insert';
-import SelectQuery from './select';
+import SelectQuery, { SelectOptions } from './select';
 import UpdateQuery from './update';
-import { OkPacket, Primary, SelectOptions } from './typings';
 
 export { DeleteQuery, InsertQuery, SelectQuery, UpdateQuery };
 
@@ -39,7 +38,7 @@ export default {
 	 * @param entity the entry to be inserted
 	 * @returns An OK packet
 	 */
-	insert<T>(table: string, entity: Partial<T>): Promise<OkPacket> {
+	insert<T>(table: string, entity: Partial<T>): Promise<void> {
 		const query = new InsertQuery<T>(table, entity);
 		if (verbose) console.log(query);
 		return query.commit();
@@ -52,7 +51,7 @@ export default {
 	 * @param entity the modified data
 	 * @returns An OK packet
 	 */
-	update<T>(table: string, id: Primary<T>, entity: Partial<T>): Promise<OkPacket> {
+	update<T>(table: string, id: string, entity: Partial<T>): Promise<void> {
 		const query = new UpdateQuery<T>(table, id, entity);
 		if (verbose) console.log(query);
 		return query.commit();
@@ -64,8 +63,8 @@ export default {
 	 * @param id the primary key of the entry to be deleted
 	 * @returns An OK packet
 	 */
-	delete<T>(table: string, id: Primary<T>): Promise<OkPacket> {
-		const query = new DeleteQuery<T>(table, id);
+	delete(table: string, id: string): Promise<void> {
+		const query = new DeleteQuery(table, id);
 		if (verbose) console.log(query);
 		return query.commit();
 	},
