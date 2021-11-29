@@ -2,7 +2,7 @@ import DeleteQuery from './delete';
 import InsertQuery from './insert';
 import SelectQuery from './select';
 import UpdateQuery from './update';
-import { OkPacket, Primary, RowData, SelectOptions } from './typings';
+import { OkPacket, Primary, SelectOptions } from './typings';
 
 export { DeleteQuery, InsertQuery, SelectQuery, UpdateQuery };
 
@@ -24,8 +24,8 @@ export default {
 	 * select<Student>('`gender`, COUNT(`id`) FROM `students` WHERE `height`>? GROUP BY `gender`', [170]);
 	 * ```
 	 */
-	select<T>(sqlQuery: string, parameters?: unknown[], options?: SelectOptions<T>): Promise<RowData[]> {
-		const query = new SelectQuery<T>('SELECT ' + sqlQuery, parameters);
+	select<T, R = Record<string, unknown> >(sqlQuery: string, parameters?: unknown[], options?: SelectOptions<T>): Promise<R[]> {
+		const query = new SelectQuery<T, R>('SELECT ' + sqlQuery, parameters);
 		if (options?.orders !== undefined) query.orderBy(...options.orders);
 		if (options?.offset !== undefined) query.offset(options.offset);
 		if (options?.limit !== undefined) query.limit(options.limit);
