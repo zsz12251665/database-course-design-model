@@ -1,0 +1,31 @@
+admin create user
+self login as user
+self and admin edit user name and password
+
+admin create notifications
+user read notifications
+user edit notifications read/unread
+
+user with transactions create comments
+anyone read comments
+
+admin create ISBN
+anyone read ISBN info:
+Give ISBN
+Require {
+	ISBN,
+	title,
+	authors,
+	copyCount,
+	inLibraryCount
+}
+admin edit ISBN
+
+admin create copy
+admin delete copy
+
+admin lend book
+admin return book
+user pay fine
+user read transaction
+Give user.id
