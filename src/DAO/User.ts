@@ -4,13 +4,13 @@ import BaseEntity from './base';
 
 const NO_HASH_ALGORITHM_ERROR_MESSAGE = 'No Hash algorithm is provided!';
 
-const createSalt = () => randomBytes(Number(process.env.SALT_LENGTH)).toString('hex');
-function createAuthentication(password: string, salt: string): string {
+const createSalt = () => randomBytes(Number(process.env.SALT_LENGTH));
+function createAuthentication(password: string, salt: Buffer): string {
 	assert(process.env.HASH_ALGORITHM !== undefined, NO_HASH_ALGORITHM_ERROR_MESSAGE);
 	return createHmac(process.env.HASH_ALGORITHM, salt).update(password).digest('hex');
 }
 
-export interface IUser {
+interface IUser {
 	id: string;
 	name: string;
 	isAdministrator: boolean;
@@ -18,16 +18,15 @@ export interface IUser {
 	salt: string;
 }
 
-class User extends BaseEntity<typeof User> {
-	static tableName = 'users';
-	static selectQuery = '* FROM `users`';
+export default class User extends BaseEntity<typeof User> {
+	static readonly entityName = 'user';
 
 	id!: string;
 	name!: string;
 	isAdministrator!: boolean;
 
 	private authentication!: string;
-	private salt!: string;
+	private salt!: Buffer;
 
 	set password(password: string) {
 		this.salt = createSalt();
@@ -48,9 +47,10 @@ class User extends BaseEntity<typeof User> {
 
 	static unwrap(wrapped: IUser): User {
 		const user = new User(wrapped.id, wrapped.name, '');
+		user.entry = wrapped.id;
 		user.isAdministrator = wrapped.isAdministrator;
 		user.authentication = wrapped.authentication;
-		user.salt = wrapped.salt;
+		user.salt = Buffer.from(wrapped.salt, 'hex');
 		return user;
 	}
 
@@ -60,10 +60,8 @@ class User extends BaseEntity<typeof User> {
 			name: this.name,
 			isAdministrator: this.isAdministrator,
 			authentication: this.authentication,
-			salt: this.salt
+			salt: this.salt.toString('hex')
 		};
 	}
 
 }
-
-export default User;

@@ -6,9 +6,6 @@ export interface IEntity {
 export interface IEntityType {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	new(...args: any): IEntity;
-	tableName: string;
-	selectQuery: string;
+	readonly entityName: string;
 	unwrap(wrapped: { id: string }): IEntity;
 }
-
-export type Wrapped<T extends IEntityType> = ReturnType<InstanceType<T>['wrap']>;

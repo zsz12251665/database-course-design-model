@@ -12,6 +12,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/mysql": "^2.15.19",
+    "@types/pluralize": "^0.0.29",
+    "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
     "@typescript-eslint/parser": "^4.32.0",
     "eslint": "^7.32.0",
@@ -22,6 +24,7 @@
   "dependencies": {
     "dotenv": "^10.0.0",
     "mysql": "^2.18.1",
+    "pluralize": "^8.0.0",
     "uuid": "^8.3.2"
   }
 }
