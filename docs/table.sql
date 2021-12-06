@@ -14,10 +14,10 @@ CREATE TABLE `books` (
 
 CREATE TABLE `copies` (
 	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
-	`book_ISBN` VARCHAR(15) NOT NULL
+	`book_id` VARCHAR(15) NOT NULL
 );
-ALTER TABLE `copies` ADD FOREIGN KEY (`book_ISBN`) REFERENCES `books`(`ISBN`) ON DELETE CASCADE ON UPDATE CASCADE;
-CREATE INDEX `copies_book_ISBN` ON `copies`(`book_ISBN`);
+ALTER TABLE `copies` ADD FOREIGN KEY (`book_id`) REFERENCES `books`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+CREATE INDEX `copies_book_id` ON `copies`(`book_id`);
 
 CREATE TABLE `transactions` (
 	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
@@ -35,14 +35,14 @@ CREATE INDEX `transactions_copy_id` ON `transactions`(`copy_id`);
 CREATE TABLE `comments` (
 	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
 	`user_id` VARCHAR(255) NOT NULL,
-	`book_ISBN` VARCHAR(15) NOT NULL,
-	`createTime` TIMESTAMP NOT NULL,
-	`content` TEXT NOT NULL
+	`book_id` VARCHAR(15) NOT NULL,
+	`content` TEXT NOT NULL,
+	`createdTime` TIMESTAMP NOT NULL
 );
 ALTER TABLE `comments` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE `comments` ADD FOREIGN KEY (`book_ISBN`) REFERENCES `books`(`ISBN`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `comments` ADD FOREIGN KEY (`book_id`) REFERENCES `books`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 CREATE INDEX `comments_user_id` ON `comments`(`user_id`);
-CREATE INDEX `comments_book_ISBN` ON `comments`(`book_ISBN`);
+CREATE INDEX `comments_book_id` ON `comments`(`book_id`);
 
 CREATE TABLE `notifications` (
 	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
