@@ -12,7 +12,7 @@ CREATE VIEW `copy_view` AS
 	FROM `copies`
 		INNER JOIN `books` ON `copies`.`book_id`=`books`.`id`;
 
-CREATE VIEW `transcation_view` AS
+CREATE VIEW `transaction_view` AS
 	SELECT `transactions`.`id` AS `id`,
 		`transactions`.`borrowTime` AS `borrowTime`,
 		`transactions`.`returnTime` AS `returnTime`,
