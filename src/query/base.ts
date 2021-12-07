@@ -8,6 +8,12 @@ const pool = mysql.createPool({
 });
 
 export default class BaseQuery<T> {
+	/**
+	 * Switch for the verbose mode
+	 * (to print the query before commit)
+	 */
+	static verbose = false;
+
 	protected sqlQuery!: string;
 	protected parameters?: unknown[];
 
@@ -16,7 +22,9 @@ export default class BaseQuery<T> {
 		this.parameters = parameters;
 	}
 
+	/** Send the query */
 	commit(): Promise<T> {
+		if (BaseQuery.verbose) console.log(this);
 		return new Promise((resolve, reject) => {
 			pool.query(this.sqlQuery, this.parameters, (error, result) => {
 				if (error !== null)

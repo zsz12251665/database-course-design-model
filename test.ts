@@ -1,3 +1,4 @@
+import './src/query/verbose';
 import User from './src/DAO/User';
 
 async function main() {
@@ -14,7 +15,9 @@ async function main() {
 	console.log(newUser.authenticate('123456'));
 }
 
-/* import query from './src/query';
+/*
+import './src/query/verbose';
+import query from './src/query';
 
 interface ITest {
 	id: string;
@@ -22,15 +25,15 @@ interface ITest {
 }
 
 async function main() {
-	query.verbose();
-	console.log(await query.select<ITest>('* FROM `test`'));
-	console.log(await query.insert<ITest>('test', { id: '11', value: '132' }));
-	console.log(await query.update<ITest>('test', '11', { id: '5' }));
-	console.log(await query.insert<ITest>('test', { id: '11', value: '123' }));
-	console.log(await query.select<ITest>('* FROM `test`'));
-	console.log(await query.delete('test', '5'));
-	console.log(await query.delete('test', '11'));
-	console.log(await query.select<ITest>('* FROM `test`'));
-} */
+	console.log(await new SelectQuery<ITest>('test').commit());
+	console.log(await new InsertQuery('test', { id: '11', value: '132' }).commit());
+	console.log(await new UpdateQuery('test', '11', { id: '5' }).commit());
+	console.log(await new InsertQuery('test', { id: '11', value: '123' }).commit());
+	console.log(await new SelectQuery<ITest>('test').commit());
+	console.log(await new DeleteQuery('test', '5').commit());
+	console.log(await new DeleteQuery('test', '11').commit());
+	console.log(await new SelectQuery<ITest>('test').commit());
+}
+*/
 
 main().catch(console.error).then(() => process.exit(0));
