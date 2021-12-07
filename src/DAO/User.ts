@@ -4,11 +4,13 @@ import BaseEntity from './base';
 
 //? 同理，错误处理
 const NO_HASH_ALGORITHM_ERROR_MESSAGE = 'No Hash algorithm is provided!';
+assert(process.env.HASH_ALGORITHM, NO_HASH_ALGORITHM_ERROR_MESSAGE);
 
 const createSalt = () => randomBytes(Number(process.env.SALT_LENGTH));
 function createAuthentication(password: string, salt: Buffer): string {
-	assert(process.env.HASH_ALGORITHM !== undefined, NO_HASH_ALGORITHM_ERROR_MESSAGE);
-	return createHmac(process.env.HASH_ALGORITHM, salt).update(password).digest('hex');
+	return createHmac(process.env.HASH_ALGORITHM as string, salt)
+		.update(password)
+		.digest('hex');
 }
 
 interface IUser {
