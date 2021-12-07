@@ -21,11 +21,11 @@ export default class Book extends BaseEntity<typeof Book> {
 		this.id = isbn;
 		this.title = title;
 		this.authors = authors;
-
 	}
 
 	static unwrap(wrapped: IBook): Book {
-		const book = new Book(wrapped.id, wrapped.title, wrapped.authors.split('\n'));
+		const authors = wrapped.authors.split('\n');
+		const book = new Book(wrapped.id, wrapped.title, authors);
 		book.entry = wrapped.id;
 		return book;
 	}

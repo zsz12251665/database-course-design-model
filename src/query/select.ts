@@ -8,20 +8,21 @@ export interface SelectOptions<T> {
 	limit?: number;
 }
 
-
-export default class SelectQuery<T, R = Record<string, unknown>> extends BaseQuery<R[]> {
-	orderBy(...orders: OrderPair<T>[]): SelectQuery<T, R> {
-		if (orders.length > 0)
-			this.sqlQuery += ' ORDER BY ' + orders.map((pair) => pair.join(' ')).join(', ');
+export default class SelectQuery<T> extends BaseQuery<T[]> {
+	orderBy(...orders: OrderPair<T>[]): SelectQuery<T> {
+		if (orders.length > 0) {
+			const orderQuery = orders.map((pair) => pair.join(' ')).join(', ');
+			this.sqlQuery += ' ORDER BY ' + orderQuery;
+		}
 		return this;
 	}
 
-	offset(offset: number): SelectQuery<T, R> {
+	offset(offset: number): SelectQuery<T> {
 		this.sqlQuery += ` OFFSET ${offset}`;
 		return this;
 	}
 
-	limit(limit: number): SelectQuery<T, R> {
+	limit(limit: number): SelectQuery<T> {
 		this.sqlQuery += ` LIMIT ${limit}`;
 		return this;
 	}

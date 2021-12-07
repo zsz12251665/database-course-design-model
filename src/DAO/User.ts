@@ -2,6 +2,7 @@ import { strict as assert } from 'assert';
 import { randomBytes, createHmac } from 'crypto';
 import BaseEntity from './base';
 
+//? 同理，错误处理
 const NO_HASH_ALGORITHM_ERROR_MESSAGE = 'No Hash algorithm is provided!';
 
 const createSalt = () => randomBytes(Number(process.env.SALT_LENGTH));

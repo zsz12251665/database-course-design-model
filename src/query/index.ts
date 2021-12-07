@@ -1,3 +1,4 @@
+import { OkPacket } from 'mysql';
 import DeleteQuery from './delete';
 import InsertQuery from './insert';
 import SelectQuery, { SelectOptions } from './select';
@@ -14,17 +15,17 @@ export default {
 	 * @param parameters values for escapes
 	 * @param options query Options
 	 * @returns an array of query results
-	 * @example The statement below returns an array of all users in ascending order:
+	 * @example To list an array of all users in ascending order,
 	 * ```ts
-	 * select<User>('* FROM `users`', { orders: ['id', 'ASC'] });
+	 * select<User>('* FROM `users`', { orders: ['id', 'ASC'] })
 	 * ```
-	 * @example The statement below returns the numbers of male and female students whose height is over 170 (cm):
+	 * @example To query the numbers of male and female students whose height is over 170 (cm),
 	 * ```ts
-	 * select<Student>('`gender`, COUNT(`id`) FROM `students` WHERE `height`>? GROUP BY `gender`', [170]);
+	 * select<Student>('`gender`, COUNT(`id`) FROM `students` WHERE `height`>? GROUP BY `gender`', [170])
 	 * ```
 	 */
-	select<T, R = Record<string, unknown> >(sqlQuery: string, parameters?: unknown[], options?: SelectOptions<T>): Promise<R[]> {
-		const query = new SelectQuery<T, R>('SELECT ' + sqlQuery, parameters);
+	async select<T>(sqlQuery: string, parameters?: unknown[], options?: SelectOptions<T>): Promise<T[]> {
+		const query = new SelectQuery<T>('SELECT ' + sqlQuery, parameters);
 		if (options?.orders !== undefined) query.orderBy(...options.orders);
 		if (options?.offset !== undefined) query.offset(options.offset);
 		if (options?.limit !== undefined) query.limit(options.limit);
@@ -37,8 +38,12 @@ export default {
 	 * @param table target table name
 	 * @param entity the entry to be inserted
 	 * @returns An OK packet
+	 * @example To add a student named `John` with student number `00001`,
+	 * ```ts
+	 * insert<Student>('students', { name: 'John', number: '00001' })
+	 * ```
 	 */
-	insert<T>(table: string, entity: Partial<T>): Promise<void> {
+	async insert<T>(table: string, entity: Partial<T>): Promise<OkPacket> {
 		const query = new InsertQuery<T>(table, entity);
 		if (verbose) console.log(query);
 		return query.commit();
@@ -50,8 +55,12 @@ export default {
 	 * @param id the primary key of the entry to be modified
 	 * @param entity the modified data
 	 * @returns An OK packet
+	 * @example To change the price of item `00001` to $10.00,
+	 * ```ts
+	 * update<Item>('items', '00001', { price: 10.00 })
+	 * ```
 	 */
-	update<T>(table: string, id: string, entity: Partial<T>): Promise<void> {
+	async update<T>(table: string, id: string, entity: Partial<T>): Promise<OkPacket> {
 		const query = new UpdateQuery<T>(table, id, entity);
 		if (verbose) console.log(query);
 		return query.commit();
@@ -62,16 +71,21 @@ export default {
 	 * @param table target table name
 	 * @param id the primary key of the entry to be deleted
 	 * @returns An OK packet
+	 * @example To remove mission with its id as 'M0010',
+	 * ```ts
+	 * delete('missions', 'M0010')
+	 * ```
 	 */
-	delete(table: string, id: string): Promise<void> {
+	async delete(table: string, id: string): Promise<OkPacket> {
 		const query = new DeleteQuery(table, id);
 		if (verbose) console.log(query);
 		return query.commit();
 	},
 
 	/**
-	 * Switch verbose mode (print the query before commit)
-	 * @param v whether the verbose mode is switched on
+	 * Switch verbose mode to print the query before commit
+	 * (It is disabled by default)
+	 * @param v whether the verbose mode is switched on (default `true`)
 	 */
 	verbose(v = true): void { verbose = v; }
 };

@@ -7,7 +7,6 @@ const pool = mysql.createPool({
 	database: process.env.MYSQL_DATABASE
 });
 
-
 export default class BaseQuery<T> {
 	protected sqlQuery!: string;
 	protected parameters?: unknown[];
