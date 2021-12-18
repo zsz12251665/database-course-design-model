@@ -29,7 +29,9 @@ interface CopyReference {
 
 export default class Transaction extends BaseEntity<typeof Transaction> {
 	static readonly entityName = 'transaction';
+
 	static readonly fineRate = 1.0; //? TBC
+	static readonly timeLimit = 30 * 86400 * 1000; //? TBC
 
 	id!: string;
 	user!: User;
@@ -44,7 +46,7 @@ export default class Transaction extends BaseEntity<typeof Transaction> {
 		if (this.isFinePaid)
 			return 0;
 		else
-			return (this.returnTime.getTime()- this.borrowTime.getTime()) * Transaction.fineRate; //? TBC
+			return Math.max(0, this.returnTime.getTime() - this.borrowTime.getTime() - Transaction.timeLimit) * Transaction.fineRate; //? TBC
 	}
 
 	constructor(user: User, copy: Copy, borrowTime: Date = new Date()) {
