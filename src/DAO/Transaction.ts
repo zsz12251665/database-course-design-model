@@ -40,13 +40,17 @@ export default class Transaction extends BaseEntity<typeof Transaction> {
 	returnTime!: Date | null;
 	isFinePaid!: boolean | null;
 
+	get dueDate(): Date {
+		return new Date(this.borrowTime.getTime() + Transaction.timeLimit);
+	}
+
 	get fine(): number {
 		if (this.returnTime === null || this.isFinePaid === null)
 			return NaN;
 		if (this.isFinePaid)
 			return 0;
 		else
-			return Math.max(0, this.returnTime.getTime() - this.borrowTime.getTime() - Transaction.timeLimit) * Transaction.fineRate; //? TBC
+			return Math.max(0, this.returnTime.getTime() - this.dueDate.getTime()) * Transaction.fineRate; //? TBC
 	}
 
 	constructor(user: User, copy: Copy, borrowTime: Date = new Date()) {

@@ -47,6 +47,17 @@ export abstract class BaseEntity<T extends IEntityType> {
 		return res.map((wrapped) => this.unwrap(wrapped) as InstanceType<T>);
 	}
 
+	static async selectById<T extends IEntityType>(this: T, id: string): Promise<InstanceType<T> | null> {
+		const query = new SelectQuery<ViewEntry<T>>(this.entityName + '_view')
+			.where('id=?', [id])
+			.limit(1);
+		const res = await query.commit();
+		if (res.length > 0)
+			return this.unwrap(res[0]) as InstanceType<T>;
+		else
+			return null;
+	}
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	static async count<T extends IEntityType>(this: T, conditions?: string, parameters?: any[]): Promise<number> {
 		const query = new CountQuery<ViewEntry<T>>(this.entityName + '_view');
