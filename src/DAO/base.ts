@@ -49,7 +49,7 @@ export abstract class BaseEntity<T extends IEntityType> {
 
 	static async selectById<T extends IEntityType>(this: T, id: string): Promise<InstanceType<T> | null> {
 		const query = new SelectQuery<ViewEntry<T>>(this.entityName + '_view')
-			.where('id=?', [id])
+			.where('`id`=?', [id])
 			.limit(1);
 		const res = await query.commit();
 		if (res.length > 0)
