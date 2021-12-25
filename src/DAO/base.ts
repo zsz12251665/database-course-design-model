@@ -41,8 +41,8 @@ export abstract class BaseEntity<T extends IEntityType> {
 		const query = new SelectQuery<ViewEntry<T>>(this.entityName + '_view');
 		if (conditions) query.where(conditions, parameters);
 		if (options?.orders !== undefined) query.orderBy(...options.orders);
-		if (options?.offset !== undefined) query.offset(options.offset);
 		if (options?.limit !== undefined) query.limit(options.limit);
+		if (options?.offset !== undefined) query.offset(options.offset);
 		const res = await query.commit();
 		return res.map((wrapped) => this.unwrap(wrapped) as InstanceType<T>);
 	}
