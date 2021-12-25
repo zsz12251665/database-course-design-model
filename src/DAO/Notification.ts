@@ -46,6 +46,8 @@ export default class Notification extends BaseEntity<typeof Notification> {
 		});
 		const notification = new Notification(user, wrapped.message, wrapped.sentTime);
 		notification.isRead = wrapped.isRead;
+		notification.entry = wrapped.id;
+		notification.id = wrapped.id;
 		return notification;
 	}
 

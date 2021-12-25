@@ -80,6 +80,8 @@ export default class Transaction extends BaseEntity<typeof Transaction> {
 		const transaction = new Transaction(user, copy, wrapped.borrowTime);
 		transaction.returnTime = wrapped.returnTime;
 		transaction.isFinePaid = wrapped.isFinePaid;
+		transaction.entry = wrapped.id;
+		transaction.id = wrapped.id;
 		return transaction;
 	}
 

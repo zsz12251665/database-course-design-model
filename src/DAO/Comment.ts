@@ -57,6 +57,8 @@ export default class Comment extends BaseEntity<typeof Comment> {
 			authors: wrapped.book_authors
 		});
 		const comment = new Comment(user, book, wrapped.content, wrapped.createdTime);
+		comment.entry = wrapped.id;
+		comment.id = wrapped.id;
 		return comment;
 	}
 
