@@ -3,6 +3,7 @@ import { Book, Comment, Copy, Notification, Transaction, User } from './src/DAO'
 
 async function main() {
 	console.log(await Book.select());
+	console.log(await Book.select('MATCH(`title`, `authors`) AGAINST (?)', ['database algorithms']));
 	console.log(await Comment.select());
 	console.log(await Copy.select());
 	console.log(await Notification.select());

@@ -11,6 +11,7 @@ CREATE TABLE `books` (
 	`title` VARCHAR(255) NOT NULL,
 	`authors` TEXT NOT NULL
 );
+CREATE FULLTEXT INDEX `books_title_authors_fulltext` ON `books`(`title`, `authors`);
 
 CREATE TABLE `copies` (
 	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
