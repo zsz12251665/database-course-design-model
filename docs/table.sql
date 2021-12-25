@@ -27,8 +27,8 @@ CREATE TABLE `transactions` (
 	`id` CHAR(36) NOT NULL PRIMARY KEY COMMENT 'UUID',
 	`user_id` VARCHAR(255) NOT NULL,
 	`copy_id` CHAR(36) NOT NULL,
-	`borrowTime` DATE NOT NULL,
-	`returnTime` DATE DEFAULT NULL,
+	`borrowDate` DATE NOT NULL,
+	`returnDate` DATE DEFAULT NULL,
 	`isFinePaid` BOOLEAN DEFAULT NULL
 );
 ALTER TABLE `transactions`

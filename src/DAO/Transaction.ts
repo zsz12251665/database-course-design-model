@@ -7,8 +7,8 @@ interface ITransaction {
 	id: string;
 	user_id: string;
 	copy_id: string;
-	borrowTime: Date;
-	returnTime: Date | null;
+	borrowDate: Date;
+	returnDate: Date | null;
 	isFinePaid: boolean | null;
 }
 
@@ -36,30 +36,30 @@ export default class Transaction extends BaseEntity<typeof Transaction> {
 	id!: string;
 	user!: User;
 	copy!: Copy;
-	borrowTime!: Date;
-	returnTime!: Date | null;
+	borrowDate!: Date;
+	returnDate!: Date | null;
 	isFinePaid!: boolean | null;
 
 	get dueDate(): Date {
-		return new Date(this.borrowTime.getTime() + Transaction.timeLimit);
+		return new Date(this.borrowDate.getTime() + Transaction.timeLimit);
 	}
 
 	get fine(): number {
-		if (this.returnTime === null || this.isFinePaid === null)
+		if (this.returnDate === null || this.isFinePaid === null)
 			return NaN;
 		if (this.isFinePaid)
 			return 0;
 		else
-			return Math.max(0, this.returnTime.getTime() - this.dueDate.getTime()) * Transaction.fineRate; //? TBC
+			return Math.max(0, this.returnDate.getTime() - this.dueDate.getTime()) * Transaction.fineRate; //? TBC
 	}
 
-	constructor(user: User, copy: Copy, borrowTime: Date = new Date()) {
+	constructor(user: User, copy: Copy, borrowDate: Date = new Date()) {
 		super();
 		this.id = uuid();
 		this.user = user;
 		this.copy = copy;
-		this.borrowTime = borrowTime;
-		this.returnTime = null;
+		this.borrowDate = borrowDate;
+		this.returnDate = null;
 		this.isFinePaid = null;
 	}
 
@@ -77,8 +77,8 @@ export default class Transaction extends BaseEntity<typeof Transaction> {
 			book_title: wrapped.copy_book_title,
 			book_authors: wrapped.copy_book_authors
 		});
-		const transaction = new Transaction(user, copy, wrapped.borrowTime);
-		transaction.returnTime = wrapped.returnTime;
+		const transaction = new Transaction(user, copy, wrapped.borrowDate);
+		transaction.returnDate = wrapped.returnDate;
 		transaction.isFinePaid = wrapped.isFinePaid;
 		transaction.entry = wrapped.id;
 		transaction.id = wrapped.id;
@@ -90,8 +90,8 @@ export default class Transaction extends BaseEntity<typeof Transaction> {
 			id: this.id,
 			user_id: this.user.id,
 			copy_id: this.copy.id,
-			borrowTime: this.borrowTime,
-			returnTime: this.returnTime,
+			borrowDate: this.borrowDate,
+			returnDate: this.returnDate,
 			isFinePaid: this.isFinePaid
 		};
 	}

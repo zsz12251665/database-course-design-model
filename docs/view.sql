@@ -14,8 +14,8 @@ CREATE VIEW `copy_view` AS
 
 CREATE VIEW `transaction_view` AS
 	SELECT `transactions`.`id` AS `id`,
-		`transactions`.`borrowTime` AS `borrowTime`,
-		`transactions`.`returnTime` AS `returnTime`,
+		`transactions`.`borrowDate` AS `borrowDate`,
+		`transactions`.`returnDate` AS `returnDate`,
 		`transactions`.`isFinePaid` AS `isFinePaid`,
 		`users`.`id` AS `user_id`,
 		`users`.`name` AS `user_name`,
