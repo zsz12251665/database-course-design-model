@@ -2,69 +2,18 @@ CREATE VIEW `user_view` AS
 	SELECT * FROM `users`;
 
 CREATE VIEW `book_view` AS
-	SELECT
-			`c`.`book_id` AS `book_id`,
-			`b`.`id` AS `id`,
-			`b`.`title` AS `title`,
-			`b`.`authors` AS `authors`,
-			(`cn`.`cnt` - count(`t`.`copy_id`)) AS `available`
-	FROM
-			(((`db_course_design`.`books` `b`
-	JOIN `db_course_design`.`copies` `c` ON
-			((`c`.`book_id` = `b`.`id`)))
-	JOIN `db_course_design`.`transactions` `t` ON
-			((`t`.`copy_id` = `c`.`id`)))
-	JOIN (
-			SELECT
-					`c2`.`book_id` AS `id`,
-					count(0) AS `cnt`
-			FROM
-					`db_course_design`.`copies` `c2`
-			GROUP BY
-					`c2`.`book_id`) `cn` ON
-			((`cn`.`id` = `c`.`book_id`)))
-	WHERE
-			(`t`.`returnDate` is null)
-	GROUP BY
-			`c`.`book_id`,
-			`b`.`id`,
-			`b`.`title`,
-			`b`.`authors`,
-			`cn`.`cnt`
-	UNION
-	SELECT
-			`b`.`id` AS `id`,
-			`b`.`id` AS `id`,
-			`b`.`title` AS `title`,
-			`b`.`authors` AS `authors`,
-			`cn`.`cnt` AS `available`
-	FROM
-			(`db_course_design`.`books` `b`
-	JOIN (
-			SELECT
-					`c2`.`book_id` AS `id`,
-					count(0) AS `cnt`
-			FROM
-					`db_course_design`.`copies` `c2`
-			GROUP BY
-					`c2`.`book_id`) `cn` ON
-			((`cn`.`id` = `b`.`id`)))
-	GROUP BY
-			`b`.`id`,
-			`b`.`title`,
-			`b`.`authors`,
-			`cn`.`cnt`
-	HAVING
-			EXISTS(
-			SELECT
-					1
-			FROM
-					(`db_course_design`.`transactions` `t`
-			JOIN `db_course_design`.`copies` `c` ON
-					((`c`.`id` = `t`.`copy_id`)))
-			WHERE
-					((`c`.`book_id` = `b`.`id`)
-							AND (`t`.`returnDate` is null))) is false
+	SELECT `id` AS `id`,
+		`books`.`title` AS `title`,
+		`books`.`authors` AS `authors`,
+		IFNULL(`book_count`.`available`, 0) AS `available`
+	FROM (`books`
+	LEFT JOIN (SELECT `copies`.`book_id` AS `id`,
+			COUNT(`copies`.`id`) AS `available`
+		FROM `copies`
+		WHERE `copies`.`id` in (SELECT DISTINCT `transactions`.`copy_id`
+			FROM `transactions`
+			WHERE `transactions`.`returnDate` IS NULL) IS FALSE
+		GROUP BY `copies`.`book_id`) `book_count` ON `books`.`id` = `book_count`.`id`);
 
 CREATE VIEW `copy_view` AS
 	SELECT `copies`.`id` AS `id`,
