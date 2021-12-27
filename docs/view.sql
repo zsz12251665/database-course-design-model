@@ -2,7 +2,18 @@ CREATE VIEW `user_view` AS
 	SELECT * FROM `users`;
 
 CREATE VIEW `book_view` AS
-	SELECT * FROM `books`;
+	SELECT `id` AS `id`,
+		`books`.`title` AS `title`,
+		`books`.`authors` AS `authors`,
+		IFNULL(`book_count`.`available`, 0) AS `available`
+	FROM (`books`
+	LEFT JOIN (SELECT `copies`.`book_id` AS `id`,
+			COUNT(`copies`.`id`) AS `available`
+		FROM `copies`
+		WHERE `copies`.`id` in (SELECT DISTINCT `transactions`.`copy_id`
+			FROM `transactions`
+			WHERE `transactions`.`returnDate` IS NULL) IS FALSE
+		GROUP BY `copies`.`book_id`) `book_count` ON `books`.`id` = `book_count`.`id`);
 
 CREATE VIEW `copy_view` AS
 	SELECT `copies`.`id` AS `id`,

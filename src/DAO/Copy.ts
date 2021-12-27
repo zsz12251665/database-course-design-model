@@ -11,6 +11,7 @@ interface BookReference {
 	book_id: string;
 	book_title: string;
 	book_authors: string;
+	book_available: number;
 }
 
 export default class Copy extends BaseEntity<typeof Copy> {
@@ -29,7 +30,8 @@ export default class Copy extends BaseEntity<typeof Copy> {
 		const book = Book.unwrap({
 			id: wrapped.book_id,
 			title: wrapped.book_title,
-			authors: wrapped.book_authors
+			authors: wrapped.book_authors,
+			available: wrapped.book_available
 		});
 		const copy = new Copy(book);
 		copy.entry = wrapped.id;
