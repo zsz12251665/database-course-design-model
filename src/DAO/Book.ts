@@ -12,20 +12,22 @@ export default class Book extends BaseEntity<typeof Book> {
 	id!: string;
 	title!: string;
 	authors!: string[];
+	available!: number;
 
 	get ISBN(): string { return this.id; }
 	set ISBN(isbn: string) { this.id = isbn; }
 
-	constructor(isbn: string, title: string, authors: string[]) {
+	constructor(isbn: string, title: string, authors: string[], available: number) {
 		super();
 		this.id = isbn;
 		this.title = title;
 		this.authors = authors;
+		this.available = available;
 	}
 
-	static unwrap(wrapped: IBook): Book {
+	static unwrap(wrapped: IBook & { available: number }): Book {
 		const authors = wrapped.authors.split('\n');
-		const book = new Book(wrapped.id, wrapped.title, authors);
+		const book = new Book(wrapped.id, wrapped.title, authors, wrapped.available);
 		book.entry = wrapped.id;
 		return book;
 	}

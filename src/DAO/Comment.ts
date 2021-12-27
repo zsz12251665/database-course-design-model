@@ -23,6 +23,7 @@ interface BookReference {
 	book_id: string;
 	book_title: string;
 	book_authors: string;
+	book_available: number;
 }
 
 export default class Comment extends BaseEntity<typeof Comment> {
@@ -54,7 +55,8 @@ export default class Comment extends BaseEntity<typeof Comment> {
 		const book = Book.unwrap({
 			id: wrapped.book_id,
 			title: wrapped.book_title,
-			authors: wrapped.book_authors
+			authors: wrapped.book_authors,
+			available: wrapped.book_available
 		});
 		const comment = new Comment(user, book, wrapped.content, wrapped.createdTime);
 		comment.entry = wrapped.id;

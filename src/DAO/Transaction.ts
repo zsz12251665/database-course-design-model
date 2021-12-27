@@ -25,12 +25,13 @@ interface CopyReference {
 	copy_book_id: string;
 	copy_book_title: string;
 	copy_book_authors: string;
+	copy_book_available: number;
 }
 
 export default class Transaction extends BaseEntity<typeof Transaction> {
 	static readonly entityName = 'transaction';
 
-	static readonly fineRate = 1.0; //? TBC
+	static readonly fineRate = 1e-9; //? TBC
 	static readonly timeLimit = 30 * 86400 * 1000; //? TBC
 
 	id!: string;
@@ -50,7 +51,7 @@ export default class Transaction extends BaseEntity<typeof Transaction> {
 		if (this.isFinePaid)
 			return 0;
 		else
-			return Math.max(0, this.returnDate.getTime() - this.dueDate.getTime()) * Transaction.fineRate; //? TBC
+			return parseFloat((Math.max(0, this.returnDate.getTime() - this.dueDate.getTime()) * Transaction.fineRate).toFixed(2)); //? TBC
 	}
 
 	constructor(user: User, copy: Copy, borrowDate: Date = new Date()) {
@@ -75,7 +76,8 @@ export default class Transaction extends BaseEntity<typeof Transaction> {
 			id: wrapped.copy_id,
 			book_id: wrapped.copy_book_id,
 			book_title: wrapped.copy_book_title,
-			book_authors: wrapped.copy_book_authors
+			book_authors: wrapped.copy_book_authors,
+			book_available: wrapped.copy_book_available
 		});
 		const transaction = new Transaction(user, copy, wrapped.borrowDate);
 		transaction.returnDate = wrapped.returnDate;

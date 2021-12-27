@@ -5,7 +5,14 @@ const pool = mysql.createPool({
 	port: Number(process.env.MYSQL_PORT ?? 3306),
 	user: process.env.MYSQL_USER,
 	password: process.env.MYSQL_PASSWORD,
-	database: process.env.MYSQL_DATABASE
+	database: process.env.MYSQL_DATABASE,
+	// Cast tinyint(1) to boolean
+	typeCast: (field, next) => {
+		if (field.type === 'TINY' && field.length === 1) {
+			return (field.string() === '1');
+		}
+		return next();
+	}
 });
 
 export default class BaseQuery<T> {
